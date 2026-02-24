@@ -25,19 +25,18 @@ public class Main {
         ArrayList<String> pepcodeRaw = readFile(file);
         StringBuilder result = new StringBuilder();
 
-        for (String line : pepcodeRaw){
+        for (String line : pepcodeRaw) {
             String[] parts = splitLine(line);
 
-            if (parts[0].isEmpty()){
+            if (parts[0].isEmpty()) {
                 continue;
             }
 
-            if (parts.length < 2){
+            if (parts.length < 2) {
                 parts[0] = parts[0].trim();
                 result.append(opcodes.get(parts[0]));
                 result.append(" ");
-            }
-            else {
+            } else {
                 String opcode = concatenateOpcode(line);
                 String hexOpcode = opcodes.get(opcode);
                 String hex = getHex(line);
