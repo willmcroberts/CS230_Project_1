@@ -2,7 +2,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.io.File;
 
-public class Main {
+public class Pepasm {
     public static void main(String[] args) throws FileNotFoundException {
         Map<String, String> opcodes = new HashMap<>();
         opcodes.put("STBAd", "F1");
@@ -18,7 +18,7 @@ public class Main {
         opcodes.put("STOP", "00");
         opcodes.put("CPBAi", "B0");
         opcodes.put("CPBAd", "B1");
-        opcodes.put("BRNE", "1A");
+        opcodes.put("BRNEi", "1A 00 03 ");
         opcodes.put(".END", "zz");
         String file = args[0];
 
@@ -47,8 +47,15 @@ public class Main {
                 result.append(" ");
                 result.append(hex);
                 result.append(" ");
+            }
 
-            } else {
+           else if (parts[0].contains("BRNE")){
+               String opcode = concatenateOpcode(line);
+               String hexOpcode = opcodes.get(opcode);
+               result.append(hexOpcode);
+
+            }
+           else {
                 String opcode = concatenateOpcode(line);
                 String hexOpcode = opcodes.get(opcode);
                 String hex = getHex(line);
