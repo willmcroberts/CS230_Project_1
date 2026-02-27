@@ -32,10 +32,22 @@ public class Main {
                 continue;
             }
 
-            if (parts.length < 2) {
+           else if (parts.length < 2) {
                 parts[0] = parts[0].trim();
                 result.append(opcodes.get(parts[0]));
                 result.append(" ");
+            }
+
+           else if (parts[0].contains(":")){
+                line = line.substring(line.indexOf(":") + 1).trim();
+                String opcode = concatenateOpcode(line);
+                String hexOpcode = opcodes.get(opcode);
+                String hex = getHex(line);
+                result.append(hexOpcode);
+                result.append(" ");
+                result.append(hex);
+                result.append(" ");
+
             } else {
                 String opcode = concatenateOpcode(line);
                 String hexOpcode = opcodes.get(opcode);
@@ -66,7 +78,7 @@ public class Main {
 
     public static String[] splitLine(String line){
         line = line.trim();
-        return line.split(" ");
+        return line.split("\\s+");
     }
 
     public static String concatenateOpcode(String line) {
