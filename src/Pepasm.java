@@ -4,6 +4,56 @@ import java.io.File;
 
 public class Pepasm {
     public static void main(String[] args) throws FileNotFoundException {
+        String file = args[0];
+        StringBuilder result = translateCode(file);
+
+        System.out.println(result);
+    }
+
+    public static StringBuilder translateCode(String file) throws FileNotFoundException {
+        Map<String, String> opcodes = getStringMap();
+
+
+        ArrayList<String> pepcodeRaw = readFile(file);
+        StringBuilder result = new StringBuilder();
+
+        for (String line : pepcodeRaw) {
+            String[] parts = splitLine(line);
+
+            if (parts[0].isEmpty()) {
+                break;
+            } else if (parts.length < 2) {
+                parts[0] = parts[0].trim();
+                result.append(opcodes.get(parts[0]));
+                result.append(" ");
+            } else if (parts[0].contains(":")){
+                line = line.substring(line.indexOf(":") + 1).trim();
+                String opcode = concatenateOpcode(line);
+                String hexOpcode = opcodes.get(opcode);
+                String hex = getHex(line);
+                result.append(hexOpcode);
+                result.append(" ");
+                result.append(hex);
+                result.append(" ");
+            } else if (parts[0].contains("BRNE")){
+                String opcode = concatenateOpcode(line);
+                String hexOpcode = opcodes.get(opcode);
+                result.append(hexOpcode);
+
+            } else {
+                String opcode = concatenateOpcode(line);
+                String hexOpcode = opcodes.get(opcode);
+                String hex = getHex(line);
+                result.append(hexOpcode);
+                result.append(" ");
+                result.append(hex);
+                result.append(" ");
+            }
+        }
+        return result;
+    }
+
+    public static Map<String, String> getStringMap() {
         Map<String, String> opcodes = new HashMap<>();
         opcodes.put("STBAd", "F1");
         opcodes.put("LDBAi", "D0");
@@ -19,53 +69,8 @@ public class Pepasm {
         opcodes.put("CPBAi", "B0");
         opcodes.put("CPBAd", "B1");
         opcodes.put("BRNEi", "1A 00 03 ");
-        opcodes.put(".END", "zz");
-        String file = args[0];
-
-        ArrayList<String> pepcodeRaw = readFile(file);
-        StringBuilder result = new StringBuilder();
-
-        for (String line : pepcodeRaw) {
-            String[] parts = splitLine(line);
-
-            if (parts[0].isEmpty()) {
-                continue;
-            }
-
-           else if (parts.length < 2) {
-                parts[0] = parts[0].trim();
-                result.append(opcodes.get(parts[0]));
-                result.append(" ");
-            }
-
-           else if (parts[0].contains(":")){
-                line = line.substring(line.indexOf(":") + 1).trim();
-                String opcode = concatenateOpcode(line);
-                String hexOpcode = opcodes.get(opcode);
-                String hex = getHex(line);
-                result.append(hexOpcode);
-                result.append(" ");
-                result.append(hex);
-                result.append(" ");
-            }
-
-           else if (parts[0].contains("BRNE")){
-               String opcode = concatenateOpcode(line);
-               String hexOpcode = opcodes.get(opcode);
-               result.append(hexOpcode);
-
-            }
-           else {
-                String opcode = concatenateOpcode(line);
-                String hexOpcode = opcodes.get(opcode);
-                String hex = getHex(line);
-                result.append(hexOpcode);
-                result.append(" ");
-                result.append(hex);
-                result.append(" ");
-            }
-        }
-        System.out.println(result);
+        opcodes.put(".END", "");
+        return opcodes;
     }
 
     public static ArrayList<String> readFile(String file) throws FileNotFoundException {
