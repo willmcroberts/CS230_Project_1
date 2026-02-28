@@ -23,34 +23,51 @@ public class Pepasm {
             if (parts[0].isEmpty()) {
                 break;
             } else if (parts.length < 2) {
-                parts[0] = parts[0].trim();
-                result.append(opcodes.get(parts[0]));
-                result.append(" ");
+                reviseLength(parts, result, opcodes);
             } else if (parts[0].contains(":")){
-                line = line.substring(line.indexOf(":") + 1).trim();
-                String opcode = concatenateOpcode(line);
-                String hexOpcode = opcodes.get(opcode);
-                String hex = getHex(line);
-                result.append(hexOpcode);
-                result.append(" ");
-                result.append(hex);
-                result.append(" ");
+                containsColon(line, result, opcodes);
             } else if (parts[0].contains("BRNE")){
-                String opcode = concatenateOpcode(line);
-                String hexOpcode = opcodes.get(opcode);
-                result.append(hexOpcode);
-
+                breakNotEqualHardCode(line, result, opcodes);
             } else {
-                String opcode = concatenateOpcode(line);
-                String hexOpcode = opcodes.get(opcode);
-                String hex = getHex(line);
-                result.append(hexOpcode);
-                result.append(" ");
-                result.append(hex);
-                result.append(" ");
+                runBasic(line, result, opcodes);
             }
         }
         return result;
+    }
+
+    public static void runBasic(String line, StringBuilder result, Map<String, String> opcodes) {
+        String opcode = concatenateOpcode(line);
+        String hexOpcode = opcodes.get(opcode);
+        String hex = getHex(line);
+        result.append(hexOpcode);
+        result.append(" ");
+        result.append(hex);
+        result.append(" ");
+    }
+
+    public static void breakNotEqualHardCode(String line, StringBuilder result, Map<String, String> opcodes) {
+        String opcode = concatenateOpcode(line);
+        String hexOpcode = opcodes.get(opcode);
+        result.append(hexOpcode);
+    }
+
+    public static void reviseLength(String[] parts, StringBuilder result, Map<String, String> opcodes) {
+        parts[0] = parts[0].trim();
+        result.append(opcodes.get(parts[0]));
+        result.append(" ");
+
+    }
+
+    public static void containsColon(String line, StringBuilder result, Map<String, String> opcodes) {
+        line = line.substring(line.indexOf(":") + 1).trim();
+        String opcode = concatenateOpcode(line);
+        String hexOpcode = opcodes.get(opcode);
+        String hex = getHex(line);
+        result.append(hexOpcode);
+        result.append(" ");
+        result.append(hex);
+        result.append(" ");
+
     }
 
     public static Map<String, String> getStringMap() {
