@@ -85,7 +85,7 @@ public class Pepasm {
         opcodes.put("STOP", "00");
         opcodes.put("CPBAi", "B0");
         opcodes.put("CPBAd", "B1");
-        opcodes.put("BRNEi", "1A 00 03 ");
+        opcodes.put("BRNEi", "1A 00 03");
         opcodes.put(".END", "");
         return opcodes;
     }
